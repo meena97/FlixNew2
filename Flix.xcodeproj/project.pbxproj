@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21952C161D1347D700874561 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21952C151D1347D700874561 /* DetailsViewController.swift */; };
+		21952C181D134E1D00874561 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21952C171D134E1D00874561 /* SearchViewController.swift */; };
 		21F788431D11F33B00F1F28B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F788421D11F33B00F1F28B /* AppDelegate.swift */; };
 		21F788481D11F33B00F1F28B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21F788461D11F33B00F1F28B /* Main.storyboard */; };
 		21F7884A1D11F33B00F1F28B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21F788491D11F33B00F1F28B /* Assets.xcassets */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21952C151D1347D700874561 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		21952C171D134E1D00874561 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		21F7883F1D11F33B00F1F28B /* Flix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21F788421D11F33B00F1F28B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		21F788471D11F33B00F1F28B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 			isa = PBXGroup;
 			children = (
 				21F788541D11F3A400F1F28B /* MoviesViewController.swift */,
+				21952C151D1347D700874561 /* DetailsViewController.swift */,
+				21952C171D134E1D00874561 /* SearchViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -229,9 +235,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21952C181D134E1D00874561 /* SearchViewController.swift in Sources */,
 				21F788431D11F33B00F1F28B /* AppDelegate.swift in Sources */,
 				21F788551D11F3A400F1F28B /* MoviesViewController.swift in Sources */,
 				21F788581D11FDC500F1F28B /* MovieCell.swift in Sources */,
+				21952C161D1347D700874561 /* DetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

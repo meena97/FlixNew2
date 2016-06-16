@@ -10,14 +10,24 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
 
     @IBOutlet weak var tableView: UITableView!
-    
+        
     var movies: [NSDictionary]?
+    
+    var filtered = [NSDictionary]()
+    var resultSearchController = UISearchController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.resultSearchController = UISearchController(searchResultsController: nil)
+        self.resultSearchController.searchResultsUpdater = self
+        self.resultSearchController.dimsBackgroundDuringPresentation = false
+        self.resultSearchController.searchBar.sizeToFit()
+        
+        self.tableView.tableHeaderView = self.resultSearchController.searchBar
         
         // Initialize a UIRefreshControl
         let refreshControl = UIRefreshControl()
@@ -57,6 +67,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     print("response: \(responseDictionary)")
                     
                     self.movies = responseDictionary["results"] as! [NSDictionary]
+                    
                     self.tableView.reloadData()
                 }
             }
@@ -108,7 +119,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let movies = movies {
-            return movies.count
+            
+            if self.resultSearchController.active {
+                return self.filtered.count
+            } else {
+                return self.movies!.count
+            }
+            
+            //return movies.count
         } else {
             return 0
         }
@@ -118,20 +136,60 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
-        let movie = movies![indexPath.row]
-        let title = movie["title"] as! String
-        let overview = movie["overview"] as! String
-        let posterPath = movie["poster_path"] as! String
+//        let movie = movies![indexPath.row]
+//        let title = movie["title"] as! String
+//        let overview = movie["overview"] as! String
+//        let posterPath = movie["poster_path"] as! String
+//        
+//        let baseURL = "http://image.tmdb.org/t/p/w500"
+//        let imageURL = NSURL(string: baseURL + posterPath)
         
-        let baseURL = "http://image.tmdb.org/t/p/w500"
-        let imageURL = NSURL(string: baseURL + posterPath)
+//        cell.titleLabel.text = title
+//        cell.overviewLabel.text = overview
+//        cell.posterView.setImageWithURL(imageURL!)
+//        
+//        print("row \(indexPath.row)")
         
-        cell.titleLabel.text = title
-        cell.overviewLabel.text = overview
-        cell.posterView.setImageWithURL(imageURL!)
         
-        print("row \(indexPath.row)")
+        if(self.resultSearchController.active) {
+            
+            let movie = self.filtered[indexPath.row]
+            let title = movie["title"] as! String
+            let overview = movie["overview"] as! String
+            let posterPath = movie["poster_path"] as! String
+            
+            let baseURL = "http://image.tmdb.org/t/p/w500"
+            let imageURL = NSURL(string: baseURL + posterPath)
+            
+            cell.titleLabel.text = title
+            cell.overviewLabel.text = overview
+            cell.posterView.setImageWithURL(imageURL!)
+            
+            print("row \(indexPath.row)")
+        } else {
+            let movie = self.movies![indexPath.row]
+            let title = movie["title"] as! String
+            let overview = movie["overview"] as! String
+            let posterPath = movie["poster_path"] as! String
+            
+            let baseURL = "http://image.tmdb.org/t/p/w500"
+            let imageURL = NSURL(string: baseURL + posterPath)
+            
+            cell.titleLabel.text = title
+            cell.overviewLabel.text = overview
+            cell.posterView.setImageWithURL(imageURL!)
+        }
+        
         return cell
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        self.filtered.removeAll(keepCapacity: false)
+        let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
+        let array = (self.movies! as NSArray).filteredArrayUsingPredicate(searchPredicate)
+        self.filtered = array as! [NSDictionary]
+        self.tableView.reloadData()
+        
     }
     
     
