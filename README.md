@@ -29,7 +29,6 @@ The following **additional** features are implemented:
 - Added Tab feature (Top-Rated, Now Playing, Upcoming)
 - Customized navigation bar
 - Customed selection cell
-- Changed flow layout
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
