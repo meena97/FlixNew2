@@ -17,6 +17,9 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var infoView: UIView!
     
+    @IBOutlet weak var avgRating: UILabel!
+    @IBOutlet weak var releaseDate: UILabel!
+    
     var movie: NSDictionary!
     
     override func viewDidLoad() {
@@ -30,6 +33,14 @@ class DetailViewController: UIViewController {
         let overview = movie["overview"]
         overviewLabel.text = overview as? String
         overviewLabel.sizeToFit()
+        
+        let avgRatingText = movie["vote_average"]
+        avgRating.text = avgRatingText as? String
+        avgRating.sizeToFit()
+        
+        let releaseDateText = movie["release_date"]
+        releaseDate.text = releaseDateText as? String
+        releaseDate.sizeToFit()
         
         let baseURL = "http://image.tmdb.org/t/p/w500/"
         

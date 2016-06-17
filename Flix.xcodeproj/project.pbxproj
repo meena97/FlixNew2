@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21451EF31D14785800C21FAB /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21451EF21D14785700C21FAB /* Reachability.swift */; };
 		21952C1A1D13654100874561 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21952C191D13654100874561 /* DetailViewController.swift */; };
-		21952C1C1D13BBAD00874561 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21952C1B1D13BBAD00874561 /* Reachability.swift */; };
 		21952C1E1D13C59A00874561 /* CollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21952C1D1D13C59A00874561 /* CollectionCell.swift */; };
 		21F788431D11F33B00F1F28B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F788421D11F33B00F1F28B /* AppDelegate.swift */; };
 		21F788481D11F33B00F1F28B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21F788461D11F33B00F1F28B /* Main.storyboard */; };
@@ -20,8 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21451EF21D14785700C21FAB /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		21952C191D13654100874561 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		21952C1B1D13BBAD00874561 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		21952C1D1D13C59A00874561 /* CollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionCell.swift; sourceTree = "<group>"; };
 		21F7883F1D11F33B00F1F28B /* Flix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flix.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21F788421D11F33B00F1F28B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,7 +72,7 @@
 				21F788591D11FDE000F1F28B /* View Controllers */,
 				21F788561D11FD7100F1F28B /* Views */,
 				21F788421D11F33B00F1F28B /* AppDelegate.swift */,
-				21952C1B1D13BBAD00874561 /* Reachability.swift */,
+				21451EF21D14785700C21FAB /* Reachability.swift */,
 				21952C1D1D13C59A00874561 /* CollectionCell.swift */,
 				21F788461D11F33B00F1F28B /* Main.storyboard */,
 				21F788491D11F33B00F1F28B /* Assets.xcassets */,
@@ -240,8 +240,8 @@
 			files = (
 				21F788431D11F33B00F1F28B /* AppDelegate.swift in Sources */,
 				21F788551D11F3A400F1F28B /* MoviesViewController.swift in Sources */,
+				21451EF31D14785800C21FAB /* Reachability.swift in Sources */,
 				21F788581D11FDC500F1F28B /* MovieCell.swift in Sources */,
-				21952C1C1D13BBAD00874561 /* Reachability.swift in Sources */,
 				21952C1A1D13654100874561 /* DetailViewController.swift in Sources */,
 				21952C1E1D13C59A00874561 /* CollectionCell.swift in Sources */,
 			);

@@ -10,47 +10,67 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UICollectionViewDelegate {
-
-    @IBOutlet weak var tableView: UITableView!
+class MoviesViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UISearchResultsUpdating, UISearchBarDelegate {
     
-    @IBOutlet weak var errorView: UIView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var networkErrorView: UIView!
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    @IBOutlet weak var nestedView: UIView!
     
     var movies: [NSDictionary]?
     
     var endpoint: String!
     
     var filtered = [NSDictionary]()
+    
     var resultSearchController = UISearchController()
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
-        errorView.hidden = true
+        self.navigationItem.title = "Movies"
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.setBackgroundImage(UIImage(named: "codepath-logo"), forBarMetrics: .Default)
+            navigationBar.tintColor = UIColor(red: 1.0, green: 0.25, blue: 0.25, alpha: 0.8)
+            
+            let shadow = NSShadow()
+            shadow.shadowColor = UIColor.grayColor().colorWithAlphaComponent(0.5)
+            shadow.shadowOffset = CGSizeMake(2, 2);
+            shadow.shadowBlurRadius = 4;
+            navigationBar.titleTextAttributes = [
+                NSFontAttributeName : UIFont.boldSystemFontOfSize(22),
+                NSForegroundColorAttributeName : UIColor(red: 0.5, green: 0.15, blue: 0.15, alpha: 0.8),
+                NSShadowAttributeName : shadow
+            ]
+        }
+        
+        
+        searchBar.delegate = self
+        
+        networkErrorView.hidden = true
         
         if Reachability.isConnectedToNetwork() == true {
             print("Network OK")
         } else {
             print("No Network Connection")
-            errorView.hidden = false
+            networkErrorView.hidden = false
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
-        
-        self.resultSearchController = UISearchController(searchResultsController: nil)
-        self.resultSearchController.searchResultsUpdater = self
-        self.resultSearchController.dimsBackgroundDuringPresentation = false
-        self.resultSearchController.searchBar.sizeToFit()
-        
-        self.tableView.tableHeaderView = self.resultSearchController.searchBar
+
         
         // Initialize a UIRefreshControl
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        collectionView.insertSubview(refreshControl, atIndex: 0)
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
         // Do any additional setup after loading the view.
+        
         
         let apiKey = "c18d201012e6bed479b73249ead7c8c3"
         let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(endpoint)?api_key=\(apiKey)")
@@ -77,11 +97,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             if let data = dataOrNil {
                 if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData( data, options:[]) as? NSDictionary {
                     
+                    MBProgressHUD.hideHUDForView(self.view, animated: true)
+                                        
                     print("response: \(responseDictionary)")
                     
-                    self.movies = responseDictionary["results"] as! [NSDictionary]
+                    self.movies = responseDictionary["results"] as? [NSDictionary]
                     
-                    self.tableView.reloadData()
+                    self.filtered = self.movies!
+                    
+                    self.collectionView.reloadData()
+                    
+                    refreshControl.endRefreshing()
                     
                 }
             }
@@ -117,7 +143,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
          // ... Use the new data to update the data source ... --> what??
                                                                         
          // Reload the tableView now that there is new data
-         self.tableView.reloadData()
+         self.collectionView.reloadData()
                                                                         
          // Tell the refreshControl to stop spinning
          refreshControl.endRefreshing()
@@ -132,104 +158,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let movies = movies {
-            
-            if self.resultSearchController.active {
-                return self.filtered.count
-            } else {
-                return self.movies!.count
-            }
-            
-            //return movies.count
-        } else {
-            return 0
-        }
-        
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
-        
-//        let movie = movies![indexPath.row]
-//        let title = movie["title"] as! String
-//        let overview = movie["overview"] as! String
-//        let posterPath = movie["poster_path"] as! String
-//        
-//        let baseURL = "http://image.tmdb.org/t/p/w500"
-//        let imageURL = NSURL(string: baseURL + posterPath)
-        
-//        cell.titleLabel.text = title
-//        cell.overviewLabel.text = overview
-//        cell.posterView.setImageWithURL(imageURL!)
-//        
-//        print("row \(indexPath.row)")
-        
-        
-        if(self.resultSearchController.active) {
-            
-            let movie = self.filtered[indexPath.row]
-            let title = movie["title"] as! String
-            let overview = movie["overview"] as! String
-            let posterPath = movie["poster_path"] as! String
-            
-            let baseURL = "http://image.tmdb.org/t/p/w500"
-            let imageURL = NSURL(string: baseURL + posterPath)
-            
-            cell.titleLabel.text = title
-            cell.overviewLabel.text = overview
-            cell.posterView.setImageWithURL(imageURL!)
-            
-            print("row \(indexPath.row)")
-        } else {
-            let movie = self.movies![indexPath.row]
-            let title = movie["title"] as! String
-            let overview = movie["overview"] as! String
-            let posterPath = movie["poster_path"] as! String
-            
-            let baseURL = "http://image.tmdb.org/t/p/w500"
-            let imageURL = NSURL(string: baseURL + posterPath)
-            
-            cell.titleLabel.text = title
-            cell.overviewLabel.text = overview
-            cell.posterView.setImageWithURL(imageURL!)
-        }
-        
-        return cell
-    }
-    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         self.filtered.removeAll(keepCapacity: false)
         let searchPredicate = NSPredicate(format: "SELF CONTAINS[c] %@", searchController.searchBar.text!)
         let array = (self.movies! as NSArray).filteredArrayUsingPredicate(searchPredicate)
         self.filtered = array as! [NSDictionary]
-        self.tableView.reloadData()
+        self.collectionView.reloadData()
         
     }
     
     
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPathForCell(cell)
-        let movie = movies![indexPath!.row]
-        
-        let detailViewController = segue.destinationViewController as! DetailViewController
-        detailViewController.movie = movie
-        
-        
-        
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-
-}
-
-// MARK: - UICollectionViewDataSource
-extension MoviesViewController: UICollectionViewDataSource {
     // Return appropriate number of movies
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return filtered.count
@@ -238,13 +176,14 @@ extension MoviesViewController: UICollectionViewDataSource {
     // Populate collection cell with movie posters
     func collectionView(tableView: UICollectionView,
                         cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = tableView.dequeueReusableCellWithReuseIdentifier("codepath.MovieCollectionCell",
-                                                                         forIndexPath: indexPath) as! CollectionCell
+        let cell = tableView.dequeueReusableCellWithReuseIdentifier("MovieCell",
+                                                                    forIndexPath: indexPath) as! CollectionCell
         let movie = filtered[indexPath.row]
         
-        //cell.titleLabel.text = title
-        //cell.overviewLabel.text = overview
-        //cell.moviePoster.setImageWithURL(imageUrl!)
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = UIColor(red: 0.9, green: 0.0, blue: 0.15, alpha: 0.6)
+        cell.selectedBackgroundView = backgroundView
+        
         
         if let posterPath = movie["poster_path"] as? String {
             let baseUrl = "http://image.tmdb.org/t/p/w500"
@@ -252,22 +191,81 @@ extension MoviesViewController: UICollectionViewDataSource {
                 let imageRequest = NSURLRequest(URL: imageUrl)
                 
                 // Fade movie poster in
-//                cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage: nil, success: {(imagerequest, imageResponse, image) -> Void in
-//                    if imageResponse != nil {
-//                        cell.moviePoster.alpha = 0.0
-//                        cell.moviePoster.image = image
-//                        UIView.animateWithDuration(0.3, animations: {() -> Void in
-//                            cell.moviePoster.alpha = 1.0
-//                        })
-//                    } else {
-//                        cell.moviePoster.image = image
-//                    }},
-//                                                        failure: nil
-//                )
+                cell.moviePic.setImageWithURLRequest(imageRequest, placeholderImage: nil, success: {(imagerequest, imageResponse, image) -> Void in
+                    if imageResponse != nil {
+                        cell.moviePic.alpha = 0.0
+                        cell.moviePic.image = image
+                        UIView.animateWithDuration(0.3, animations: {() -> Void in
+                            cell.moviePic.alpha = 1.0
+                        })
+                    } else {
+                        cell.moviePic.image = image
+                    }},
+                                                     failure: nil
+                )
             }
         }
         return cell
     }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filtered = movies!
+        } else {
+            filtered = movies!.filter({(dataItem: NSDictionary) -> Bool in
+                // If dataItem matches the searchText, return true to include it
+                let title = dataItem["title"] as! String
+                if title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            
+        }
+        
+        
+        collectionView.reloadData()
+    }
+    
+    // Show cancel button on searchbar when being used
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        self.searchBar.setShowsCancelButton(true, animated: true)
+    }
+
+    // Clear search bar when cancel is hit
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBar.resignFirstResponder()
+        searchBar.text = ""
+        filtered = movies!
+        collectionView.reloadData()
+    }
+
+    
+    
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let cell = sender as! UICollectionViewCell
+        let indexPath = collectionView.indexPathForCell(cell)
+        let movie = filtered[indexPath!.row]
+        
+        let detailViewController = segue.destinationViewController as! DetailViewController
+        detailViewController.movie = movie
+    
+        
+        
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    
+    
+
 }
+
+
 
 
