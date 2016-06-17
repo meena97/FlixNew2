@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         upcomingNavigationController.tabBarItem.image = UIImage(named: "upcoming")
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [nowPlayingNavigationController, topRatedNavigationController]
+        tabBarController.viewControllers = [nowPlayingNavigationController, topRatedNavigationController, upcomingNavigationController]
         
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()

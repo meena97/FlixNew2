@@ -10,10 +10,12 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UICollectionViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-        
+    
+    @IBOutlet weak var errorView: UIView!
+    
     var movies: [NSDictionary]?
     
     var endpoint: String!
@@ -23,6 +25,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        errorView.hidden = true
+        
+        if Reachability.isConnectedToNetwork() == true {
+            print("Network OK")
+        } else {
+            print("No Network Connection")
+            errorView.hidden = false
+            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }
         
         self.resultSearchController = UISearchController(searchResultsController: nil)
         self.resultSearchController.searchResultsUpdater = self
@@ -57,25 +69,25 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         //Display HUD right before the request is made
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         
-        let task: NSURLSessionDataTask = session.dataTaskWithRequest(request,
-                                                                     completionHandler: { (dataOrNil, response, error) in
+        let task: NSURLSessionDataTask = session.dataTaskWithRequest(request, completionHandler: { (dataOrNil, response, error) in
                                                                         
          // Hide HUD once the network request comes back (must be done on main UI thread)
          MBProgressHUD.hideHUDForView(self.view, animated: true)
                                                                         
             if let data = dataOrNil {
-                if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
-                                                                                data, options:[]) as? NSDictionary {
+                if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData( data, options:[]) as? NSDictionary {
+                    
                     print("response: \(responseDictionary)")
                     
                     self.movies = responseDictionary["results"] as! [NSDictionary]
                     
                     self.tableView.reloadData()
+                    
                 }
             }
+            
         })
         
-
         task.resume()
         
     }
@@ -118,6 +130,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let movies = movies {
@@ -195,9 +208,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
-    
-
-    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -215,7 +225,49 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
-    
 
 }
+
+// MARK: - UICollectionViewDataSource
+extension MoviesViewController: UICollectionViewDataSource {
+    // Return appropriate number of movies
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return filtered.count
+    }
+    
+    // Populate collection cell with movie posters
+    func collectionView(tableView: UICollectionView,
+                        cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = tableView.dequeueReusableCellWithReuseIdentifier("codepath.MovieCollectionCell",
+                                                                         forIndexPath: indexPath) as! CollectionCell
+        let movie = filtered[indexPath.row]
+        
+        //cell.titleLabel.text = title
+        //cell.overviewLabel.text = overview
+        //cell.moviePoster.setImageWithURL(imageUrl!)
+        
+        if let posterPath = movie["poster_path"] as? String {
+            let baseUrl = "http://image.tmdb.org/t/p/w500"
+            if let imageUrl = NSURL(string: baseUrl + posterPath) {
+                let imageRequest = NSURLRequest(URL: imageUrl)
+                
+                // Fade movie poster in
+//                cell.posterView.setImageWithURLRequest(imageRequest, placeholderImage: nil, success: {(imagerequest, imageResponse, image) -> Void in
+//                    if imageResponse != nil {
+//                        cell.moviePoster.alpha = 0.0
+//                        cell.moviePoster.image = image
+//                        UIView.animateWithDuration(0.3, animations: {() -> Void in
+//                            cell.moviePoster.alpha = 1.0
+//                        })
+//                    } else {
+//                        cell.moviePoster.image = image
+//                    }},
+//                                                        failure: nil
+//                )
+            }
+        }
+        return cell
+    }
+}
+
 
