@@ -41,8 +41,11 @@ Please list two areas of the assignment you'd like to **discuss further with you
 Here's a walkthrough of implemented user stories:
 
 Network Error:
+<a href="http://imgur.com/xNSoXAu"><img src="http://imgur.com/xNSoXAu.gif" title="source: imgur.com" /></a>
 
-<img src='http://imgur.com/xNSoXAu' title='Network Error' width='' alt='Video Walkthrough' />
+App Demo:
+<a href="http://imgur.com/xNSoXAu"><img src="http://imgur.com/xNSoXAu.gif" title="source: imgur.com" /></a>
+
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
