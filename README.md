@@ -50,6 +50,7 @@ Describe any challenges encountered while building the app.
 - It took me a while to figure out how to display the "Networking Label Error" -> I had it on the Table View instead of over it
 - Converting from the table view to the collection view was challenging. Modifying the flow layout was also challenging.
 - The search bar was tricky at first. When I was in table view, I used "tableView.tableHeaderView", but when I changed to Collection View I couldn't use that method anymore.
+- Attempted to include both a table and a collection view, but ran into trouble with the search bar/got errors
 - Making the images fade in was also tricky. I had to watch a lot of youtube videos/tutorials :)
 
 ## Credits
