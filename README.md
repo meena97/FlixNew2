@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project 2 - Flix
 
 Flix is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
@@ -65,3 +66,6 @@ List an 3rd party libraries, icons, graphics, or other assets you used in your a
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+=======
+# FlixNew2
+>>>>>>> 74594a81533c4ba834f0b641e44034fefe6969a2
