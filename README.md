@@ -29,6 +29,10 @@ The following **additional** features are implemented:
 - Added Tab feature (Top-Rated, Now Playing, Upcoming)
 - Customized navigation bar
 - Customed selection cell
+- Can switch between table and collection view
+- User can click on ticket button which will redirect them to Fandango.com
+- Added App icon and launch screen
+- Display average rating on details page (which is color coded relative to rating)
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
@@ -39,15 +43,18 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-Network Error:
+**Network Error:**
 
 <a href="http://imgur.com/xNSoXAu"><img src="http://imgur.com/xNSoXAu.gif" title="source: imgur.com" /></a>
 
 
-
-App Demo:
+**App Demo:**
 
 <a href="http://imgur.com/BV3Xe3a"><img src="http://imgur.com/BV3Xe3a.gif" title="source: imgur.com" /></a>
+
+**Revised Flix:** (with added features)
+
+<a href="http://imgur.com/ZP082mI"><img src="http://imgur.com/ZP082mI.gif" title="source: imgur.com" /></a>
 
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
